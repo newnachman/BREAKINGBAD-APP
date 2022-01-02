@@ -1,24 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import Character from './routes/Character';
+import Episode from './routes/Episode';
+import Main from './routes/Main';
+import './styles/global-styles';
+import { GlobalStyle } from './styles/global-styles';
+import ScrollButton from "./components/ScrollButton";
 
 function App() {
+
+  const [showScrollButton, setShowScrollButton] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
+  
+  const handleScroll = () => {
+    if (window.scrollY >= 300) {
+      setShowScrollButton(true);
+    } else {
+      setShowScrollButton(false);
+    }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <GlobalStyle/>
+    <Router>
+      <Switch>
+        <Route exact path="/main" component={Main}></Route>
+        <Route exact path="/episode/:id" component={Episode}></Route>
+        <Route exact path="/character/:name" component={Character}></Route>
+        <Route exact path="/" component={Main}></Route>
+        <Route exact path="*" component={Main}></Route>
+      </Switch>
+    </Router>
+     <ScrollButton showScrollButton={showScrollButton}/> 
+    </>
   );
 }
 
